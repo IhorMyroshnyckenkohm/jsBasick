@@ -1,28 +1,15 @@
 function retry(fn, maxAttempts) {
-    return async function(...args) {
-        let attempts = 0;
-        let lastError;
-
-        while (attempts < maxAttempts) {
-            try {
-                return await fn(...args);
-            } catch (error) {
-                lastError = error;
-                attempts++;
-                console.log(`Attempt ${attempts} failed: ${error.message}`);
-            }
-        }
-
-        throw lastError; // Повертаємо останню помилку
-    };
+  return function (...args) {
+    let result;
+    for (let attempt = 0; attempt < maxAttempts; attempt++) {
+      result = fn(...args);
+    }
+    return result;
+  };
 }
 
-// Приклад використання
-const unreliableFunction = async () => {
-    if (Math.random() < 0.5) throw new Error('Random error');
-    return 'Success!';
-};
 
-const retriedFunction = retry(unreliableFunction, 5);
+const exampleFn = (x) => x * 2;
 
-retriedFunction().then(console.log).catch(console.error);
+const retriedFn = retry(exampleFn, 3);
+console.log(retriedFn(5)); 
