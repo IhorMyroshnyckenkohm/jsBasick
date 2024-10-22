@@ -6,7 +6,6 @@ function debounce(callback, delay) {
     };
 }
 
-// Приклад використання
 const log = debounce((message) => console.log(message), 1000);
 
 log("Перше повідомлення");
